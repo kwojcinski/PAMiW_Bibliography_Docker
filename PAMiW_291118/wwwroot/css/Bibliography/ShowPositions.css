@@ -1,0 +1,9 @@
+﻿.divFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+a:not([href]):not([tabindex]) {
+    color: white;
+}

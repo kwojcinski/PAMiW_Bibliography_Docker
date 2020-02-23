@@ -1,0 +1,47 @@
+﻿@model PAMiW_291118.Models.BibliographicPosition
+@{
+    ViewData["Title"] = "ShowPosition";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="~/js/Bibliography/ShowPosition.js"></script>
+<link href="~/css/Bibliography/ShowPosition.css" rel="stylesheet" />
+<link href="~/css/Bibliography/ShowPositions.css" rel="stylesheet" />
+<body>
+    @if (Model.UserId == User.Claims.FirstOrDefault(b => b.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value)
+    {
+    <a class="btn btn-primary connect" href="/Bibliography/ConnectFile?link1=@Model.Links.FirstOrDefault(x => x.Rel == "get-position").Href&link2=@Model.Links.FirstOrDefault(x => x.Rel == "get-files").Href">Podłącz plik</a>
+    }
+    <div class="marginBott">
+        <label class="fontWeight">Tytuł</label>
+        <div>@Model.Title</div>
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Autor</label>
+        <div>@Model.Author</div>
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Data publikacji</label>
+        <div>@Model.PublicationDate.ToShortDateString()</div>
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Pliki</label>
+        @if (Model.Files.Count() == 0)
+        {
+            <div>Brak plików</div>
+        }
+        @foreach (File file in Model.Files)
+        {
+    <div class="divFlex">
+        <div class="col-6"><a href="@file.Links.FirstOrDefault(x => x.Rel == "get-file").Href.Replace("web2", "localhost:8081")" target="_blank">@file.FileName</a></div>
+        @if (Model.UserId == User.Claims.FirstOrDefault(b => b.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value)
+        {
+            <div class="col-6"><a onclick="disconnect('@Model.Links.FirstOrDefault(x => x.Rel == "disconnect-file").Href.Replace("web2", "localhost:8081")', '@file.Guid')" class="btn btn-primary">Odłącz</a></div>
+        }
+    </div>
+         }
+    </div>
+</body>
+<script>
+    var x = "@Model.UserId";
+    var y = "@User.Claims.FirstOrDefault(b => b.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value"
+</script>

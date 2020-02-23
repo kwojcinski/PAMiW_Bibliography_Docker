@@ -1,0 +1,22 @@
+﻿@model IEnumerable<PAMiW_291118.Models.BibliographicPosition>
+@{
+    ViewData["Title"] = "ShowPositions";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<link href="~/css/Bibliography/ShowPositions.css" rel="stylesheet" />
+<script src="~/js/Bibliography/ShowPositions.js"></script>
+<h2>Twoje pozycje:</h2>
+@if (Model.Count() == 0)
+{
+    <div>Brak pozycji</div>
+}
+@foreach (BibliographicPosition position in Model)
+{
+    <div class="divFlex">
+        <div class="col-4">@position.Title</div>
+        <div class="col-4"><a href="/Bibliography/ShowPosition?link=@position.Links.FirstOrDefault(x => x.Rel == "get-position").Href" class="btn btn-primary">Detale</a></div>
+        <div class="col-4"><a onclick="DeletePosition('@position.Links.FirstOrDefault(x => x.Rel == "delete-position").Href.Replace("web2", "localhost:8081")')" class="btn btn-danger ">Usuń</a></div>
+    </div>
+}
+
+

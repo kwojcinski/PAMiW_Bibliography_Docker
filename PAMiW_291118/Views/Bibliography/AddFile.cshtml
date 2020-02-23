@@ -1,0 +1,47 @@
+﻿@model PAMiW_291118.Models.UserViewModel
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="~/js/Bibliography/AddFile.js"></script>
+<script src="~/js/Register.js"></script>
+<link href="~/css/Bibliography/AddFile.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "AddFile";
+}
+
+<h2>Dodaj plik</h2>
+<form id="idForm" action="http://localhost:8081/rest/AddFile" method="post" enctype="multipart/form-data">
+    <div class="marginBott">
+        <input id="userGuid" name="UserGuid" type="hidden" value="@Model.Id" />
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Nazwa</label>
+        <input class="form-control" name="FileName" required />
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight displayGrid">Plik PDF</label>
+        <input id="pdfInput" name="PDF" type="file" accept="application/pdf" onchange="validateFile()" required />
+        <div class="error" id="errorPDF"></div>
+    </div>
+    <input class="btn btn-primary button-submit" id="submit" type="submit" />
+</form>
+<script>
+    $("#idForm").submit(function (event) {
+    event.preventDefault();
+    var post_url = $(this).attr("action");
+    var request_method = $(this).attr("method");
+    var form_data = new FormData(this);
+    $.ajax({
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false
+    }).done(function (response) {
+        alert("Pomyślnie dodano!");
+        location.href = "/Bibliography/ShowFiles?userGuid=" + $("#userGuid").val();
+    })
+        .fail( function(xhr, textStatus, errorThrown) {
+        alert(xhr.responseText);
+    });
+});
+</script>

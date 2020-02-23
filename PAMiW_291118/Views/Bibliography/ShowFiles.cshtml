@@ -1,0 +1,19 @@
+﻿@model IEnumerable<PAMiW_291118.Models.File>
+@{
+    ViewData["Title"] = "ShowFiles";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<link href="~/css/Bibliography/ShowPositions.css" rel="stylesheet" />
+<script src="~/js/Bibliography/ShowFiles.js"></script>
+<h2>Twoje pliki:</h2>
+@if (Model.Count() == 0)
+{
+    <div>Brak plików</div>
+}
+@foreach (File file in Model)
+{
+    <div class="divFlex">
+        <div class="col-6"><a href="@file.Links.FirstOrDefault(x => x.Rel == "get-file").Href.Replace("web2", "localhost:8081")" target="_blank">@file.FileName</a></div>
+        <div class="col-6"><a onclick="remove('@file.Links.FirstOrDefault(x => x.Rel == "delete-file").Href.Replace("web2", "localhost:8081")')" class="btn btn-primary">Usuń</a></div>
+    </div>
+}

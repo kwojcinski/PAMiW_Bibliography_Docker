@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PAMiW_P1</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="~/js/notify.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PAMiW - 291118</a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                    <ul class="navbar-nav ml-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Profile" asp-route-login="@User.Claims.FirstOrDefault(b => b.Type == "nickname").Value" style="font-weight: bold;">Witaj, @User.Claims.FirstOrDefault(b => b.Type == "nickname").Value</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-controller="Home" asp-action="Logout">
+                                    <a class="nav-link text-dark" href="javascript:document.forms[0].submit()">Wyloguj się</a>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+                @RenderBody()
+        </main>
+    </div>
+    
+    @*<footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2019 - PAMiW_P1 - 291118
+        </div>
+    </footer>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+    var notifications = document.getElementById('notifications');
+        var showNotification = function (data) {
+            $("#notification > a > span > mark").text(data)
+        };
+        @if (User.Identity.IsAuthenticated) {
+                    <text>
+                    var source = new EventSource('/sse-notifications');
+
+        source.onmessage = function (event) {
+            //$.get( "/Notification/NotificationCount", function( data ) {
+            //   showNotification(data);
+            //});
+            var x = event.data.indexOf("~");
+            var id = event.data.substring(0, x);
+            var y = "@User.Claims.FirstOrDefault(b => b.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value";
+            if (id == y) {
+
+            }
+            else {
+                            var n = event.data.indexOf("http");
+            var href = event.data.substring(n);
+                    toastr.options = {
+                      "closeButton": true,
+                      "debug": false,
+                      "newestOnTop": false,
+                      "progressBar": false,
+                      "positionClass": "toast-top-right",
+                      "preventDuplicates": false,
+                      "onclick": onclick,
+                      "showDuration": "5000",
+                      "hideDuration": "1000",
+                      "timeOut": "5000",
+                      "extendedTimeOut": "1000",
+                      "showEasing": "swing",
+                      "hideEasing": "linear",
+                      "showMethod": "fadeIn",
+                      "hideMethod": "fadeOut"
+            }
+            toastr.info(event.data.substring(x + 1, n), 'Nowa publikacja!', 
+                { onclick: function () { location.href = href; } }
+                );
+            }
+        }
+        source.addEventListener('alert', function(event) {
+                alert(event.data);
+        });
+        </text>
+        }
+        function toastrHref(href) {
+            location.href = href;
+        }
+    </script>
+</body>
+</html>

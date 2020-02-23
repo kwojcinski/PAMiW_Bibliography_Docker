@@ -1,0 +1,15 @@
+﻿@model PAMiW_291118.Models.UserViewModel
+<!DOCTYPE HTML>
+<html lang=pl>
+<head>
+    <link href="~/css/Profile.css" rel="stylesheet" />
+    <title>Profil</title>
+</head>
+<h2>Czesć, @User.Claims.FirstOrDefault(b => b.Type == "nickname").Value. Wybierz co chcesz zrobić!</h2>
+<body>
+    <div class="divMargin" ><a href="/Bibliography/ShowPositions?userGuid=@Model.Id">Wyświetl pozycje</a></div>
+    <div class="divMargin" ><a href="/Bibliography/ShowFiles?userGuid=@Model.Id">Wyświetl pliki</a></div>
+    <div class="divMargin" ><a href="/Bibliography/AddFile?userGuid=@Model.Id">Dodaj plik</a></div>
+    <div class="divMargin" ><a href="/Bibliography/AddPosition?userGuid=@Model.Id">Dodaj pozycję</a></div>
+</body>
+</html>

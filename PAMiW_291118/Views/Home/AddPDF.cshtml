@@ -1,0 +1,39 @@
+﻿@model PAMiW_291118.Models.PDFViewModel
+<!DOCTYPE HTML>
+<html lang=pl>
+<head>
+    <script src="~/js/Register.js"></script>
+    <title>Dodaj PDF</title>
+</head>
+<body>
+    @{
+        ViewData["Title"] = "Dodaj PDF";
+    }
+    <h2>@ViewData["Title"]</h2>
+
+    @using (Html.BeginForm("AddPDF", "Home", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return validatePDFForm()" }))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            @Html.HiddenFor(m => m.Login)
+        </div>
+        <div id="Name" class="form-group hidden">
+            <label>Nazwa PDF</label><p style="display:inline; color:red">*</p>
+            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", @maxlength = "120", @style = "width: 50%" } })
+            @Html.ValidationMessageFor(m => m.Name, "", new { @style = "color: red; font-weight: bold;" })
+        </div>
+        <div id="PDF" class="form-group hidden">
+            <div>
+                <label>Plik PDF</label><p style="display:inline; color:red">*</p>
+            </div>
+            <input id="pdfInput" name="File" type="file" accept="application/pdf" onchange="validatePDF()" />
+            <div>
+                @Html.ValidationMessageFor(m => m.File, "", new { @style = "color: red; font-weight: bold;", @id = "errorPDF" })
+            </div>
+        </div>
+        <div class="form-group">
+            <input id="submit" type="submit" class="btn btn-primary" />
+        </div>
+    }
+</body>
+</html>

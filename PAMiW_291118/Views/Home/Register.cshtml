@@ -1,0 +1,37 @@
+﻿@model PAMiW_291118.Models.UserViewModel
+<!DOCTYPE HTML>
+<html lang=pl>
+<head>
+    <script src="~/js/Register.js"></script>
+    <link href="~/css/Register.css" rel="stylesheet" />
+    <title>Rejestracja</title>
+</head>
+<body>
+    @{
+        ViewData["Title"] = "Zarejestruj się";
+    }
+    <h2>@ViewData["Title"]</h2>
+
+    <form action="/Home/Register" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+        <div class="form-group">
+            <label>Email</label>
+            <input class="form-control" id="email" name="Email" type="text" oninput="onFunction(1)" />
+            @Html.ValidationMessageFor(m => m.Email, "", new { @style = "color: red; font-weight: bold;" })
+        </div>
+        <div class="form-group">
+            <label>Login</label>
+            <input class="form-control" id="login" name="Login" type="text" oninput="onFunction(2)" />
+            @Html.ValidationMessageFor(m => m.Login, "", new { @style = "color: red; font-weight: bold;" })
+        </div>
+        <div class="form-group">
+            <label>Hasło</label>
+            <input class="form-control password" id="password" name="Passwd" type="password" oninput="onFunction(3)" /><img alt="Brak zdjęcia" src="~/images/closedEyeSmall.png" id="passwordSpan" class="showPasswordImage" onclick="showPassword('password')">
+        </div>
+        <div class="form-group">
+            <label>Powtórzone hasło</label>
+            <input class="form-control password" id="repeatPassword" type="password" oninput="onFunction(4)" /><img alt="Brak zdjęcia" src="~/images/closedEyeSmall.png" id="repeatPasswordSpan" class="showPasswordImage" onclick="showPassword('repeatPassword')">
+        </div>
+        <input id="submit" type="submit" class="button-submit" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,35 @@
+﻿@model PAMiW_291118.Models.ConnectFileViewModel
+@{
+    ViewData["Title"] = "ConnectFile";
+}
+<link href="~/css/Bibliography/ShowPositions.css" rel="stylesheet" />
+<h2>Połącz plik:</h2>
+@if(Model.Files.Count() == 0)
+{
+    <div>Brak plików. <a href="/Bibliography/ShowPosition?link=@Model.Position.Links.FirstOrDefault(x => x.Rel == "get-position").Href">Wróć do pozycji.</a></div>
+}
+@foreach (File file in Model.Files)
+{   
+    <div class="divFlex">
+        <div class="col-6"><a href="@file.Links.FirstOrDefault(x => x.Rel == "get-file").Href.Replace("web2", "localhost:8081")" target="_blank">@file.FileName</a></div>
+        <div class="col-6"><a onclick="connect('@Model.Position.Links.FirstOrDefault(x => x.Rel == "connect-file").Href.Replace("web2", "localhost:8081")', '@file.Guid')" class="btn btn-primary">Podłącz</a></div>
+    </div>
+}
+<script>
+        function connect(link, guid) {
+        if (confirm("Czy na pewno chcesz połączyć ten plik?")) {
+            $.ajax({
+                url: link + guid,
+                type: 'PATCH',
+                success: function (data) {
+                    alert("Pomyślnie połączono!");
+                    location.href = "/Bibliography/ShowPosition?link=@Model.Position.Links.FirstOrDefault(x => x.Rel == "get-position").Href";
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+    }
+</script>
+

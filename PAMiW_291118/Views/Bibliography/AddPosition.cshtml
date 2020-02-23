@@ -1,0 +1,63 @@
+﻿@model PAMiW_291118.Models.UserViewModel
+@{
+    ViewData["Title"] = "AddPosition";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<link href="~/css/Bibliography/AddFile.css" rel="stylesheet" />
+<h2>Dodaj pozycję</h2>
+
+<form id="idForm" action="http://localhost:8081/rest/PostPosition" method="post">
+    <div>
+        <input name="UserGuid" type="hidden" value="@Model.Id" />
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Tytuł</label>
+        <input class="form-control" name="Title" required/>
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Autor</label>
+        <input class="form-control" name="Author" required/>
+    </div>
+    <div class="marginBott">
+        <label class="fontWeight">Data publikacji</label>
+        <input class="form-control" type="date" name="PublicationDate" required/>
+    </div>
+    <input id="submit" type="submit" class="button-submit btn btn-primary" />
+</form>
+<script>
+    var id = "@Model.Id";
+    $("#idForm").submit(function (event) {
+        event.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: form.serialize(),
+                   success: function(data)
+                   {
+                       var href = data.links.filter(function (element) { return element.rel == "get-position"; })
+                       alert("Pomyślnie dodano!");
+                       send(href[0].href);
+                   },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+                 });
+    });
+        function send(href) {
+            var form_data = {
+                UserId: id,
+                Href: href,
+                Notification: "Dodano pomyślnie publikacje"
+        }
+        $.ajax({
+		url : "/Notification/Sender",
+		type: "POST",
+		data : form_data
+	}).done(function(response){
+        location.href = "/Bibliography/ShowPositions?userGuid=@Model.Id";
+	});
+    }
+</script>
